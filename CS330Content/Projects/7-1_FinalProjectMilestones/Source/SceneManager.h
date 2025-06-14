@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-/***********************************************************
+/************************************************************
  *  SceneManager
  *
  *  This class contains the code for preparing and rendering
@@ -106,5 +106,10 @@ public:
 
 	// load all of the needed textures before rendering
 	void LoadSceneTextures();
+
+	// pre-set light sources for 3D scene
+	void SetupSceneLights();
+	// pre-define the object materials for lighting
+	void DefineObjectMaterials();
 
 };

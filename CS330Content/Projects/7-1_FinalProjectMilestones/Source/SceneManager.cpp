@@ -387,9 +387,86 @@ void SceneManager::LoadSceneTextures() {
 	bReturn = CreateGLTexture(
 		"textures/mousepad.jpg",
 		"mousepad");
+	bReturn = CreateGLTexture(
+		"textures/desk.jpg",
+		"desk");
+	bReturn = CreateGLTexture(
+		"textures/monitor.jpg",
+		"monitor");
+	bReturn = CreateGLTexture(
+		"textures/wall.jpg",
+		"wall");
 
 	// bind textures to texture slots after being loaded into memory, there are 16 texture slots
 	BindGLTextures();
+}
+
+/***********************************************************
+ *  DefineObjectMaterials()
+ *
+ *  This method is used for configuring the various material
+ *  settings for all of the objects within the 3D scene.
+ ***********************************************************/
+void SceneManager::DefineObjectMaterials()
+{
+	/*** STUDENTS - add the code BELOW for defining object materials. ***/
+	/*** There is no limit to the number of object materials that can ***/
+	/*** be defined. Refer to the code in the OpenGL Sample for help  ***/
+
+	OBJECT_MATERIAL light1;
+	light1.ambientColor = glm::vec3(0.2f, 0.2f, 0.2f);
+	light1.ambientStrength = 1.0f;
+	light1.diffuseColor = glm::vec3(0.4f, 0.4f, 0.4f);
+	light1.specularColor = glm::vec3(0.2f, 0.2f, 0.2f);
+	light1.shininess = 1.0;
+	light1.tag = "light1";
+
+	m_objectMaterials.push_back(light1);
+
+	OBJECT_MATERIAL light2;
+	light2.ambientColor = glm::vec3(0.1f, 0.1f, 0.1f);
+	light2.ambientStrength = 1.0f;
+	light2.diffuseColor = glm::vec3(0.4f, 0.4f, 0.4f);
+	light2.specularColor = glm::vec3(0.8f, 0.8f, 0.8f);
+	light2.shininess = 10.0;
+	light2.tag = "light2";
+
+	m_objectMaterials.push_back(light2);
+}
+
+/***********************************************************
+ *  SetupSceneLights()
+ *
+ *  This method is called to add and configure the light
+ *  sources for the 3D scene.  There are up to 4 light sources.
+ ***********************************************************/
+void SceneManager::SetupSceneLights()
+{
+	// this line of code is NEEDED for telling the shaders to render 
+	// the 3D scene with custom lighting, if no light sources have
+	// been added then the display window will be black - to use the 
+	// default OpenGL lighting then comment out the following line
+	// m_pShaderManager->setBoolValue(g_UseLightingName, true);
+
+	/*** STUDENTS - add the code BELOW for setting up light sources ***/
+	/*** Up to four light sources can be defined. Refer to the code ***/
+	/*** in the OpenGL Sample for help                              ***/
+	m_pShaderManager->setVec3Value("lightSources[0].position", 0.0f, 5.0f, 0.0f);
+	m_pShaderManager->setVec3Value("lightSources[0].ambientColor", 0.1f, 0.1f, 0.1f);
+	m_pShaderManager->setVec3Value("lightSources[0].diffuseColor", 0.2f, 0.2f, 0.2f);
+	m_pShaderManager->setVec3Value("lightSources[0].specularColor", 0.2f, 0.2f, 0.2f);
+	m_pShaderManager->setFloatValue("lightSources[0].focalStrength", 1.0f);
+	m_pShaderManager->setFloatValue("lightSources[0].specularIntensity", 1.0f);
+
+	m_pShaderManager->setVec3Value("lightSources[1].position", 0.0f, 5.0f, 0.0f);
+	m_pShaderManager->setVec3Value("lightSources[1].ambientColor", 0.1f, 0.1f, 0.1f);
+	m_pShaderManager->setVec3Value("lightSources[1].diffuseColor", 0.2f, 0.2f, 0.2f);
+	m_pShaderManager->setVec3Value("lightSources[1].specularColor", 0.2f, 0.2f, 0.2f);
+	m_pShaderManager->setFloatValue("lightSources[1].focalStrength", 1.0f);
+	m_pShaderManager->setFloatValue("lightSources[1].specularIntensity", 1.0f);
+
+	m_pShaderManager->setBoolValue("bUseLighting", true);
+
 }
 
 /***********************************************************
@@ -402,6 +479,8 @@ void SceneManager::LoadSceneTextures() {
 void SceneManager::PrepareScene()
 {
 	LoadSceneTextures();
+	DefineObjectMaterials();
+	SetupSceneLights();
 	// only one instance of a particular mesh needs to be
 	// loaded in memory no matter how many times it is drawn
 	// in the rendered 3D scene
@@ -435,7 +514,7 @@ void SceneManager::RenderScene()
 	/*** and drawing all the basic 3D shapes.						***/
 	/******************************************************************/
 	// set the XYZ scale for the mesh
-	scaleXYZ = glm::vec3(20.0f, 1.0f, 10.0f);
+	scaleXYZ = glm::vec3(10.0f, 1.0f, 6.0f);
 
 	// set the XYZ rotation for the mesh
 	XrotationDegrees = 0.0f;
@@ -453,7 +532,33 @@ void SceneManager::RenderScene()
 		ZrotationDegrees,
 		positionXYZ);
 
-	SetShaderColor(1, 1, 1, 1);
+	// SetShaderColor(1, 1, 1, 1);
+	SetShaderTexture("desk");
+	SetShaderMaterial("light1");
+	m_basicMeshes->DrawPlaneMesh();
+
+	// set the XYZ scale for the mesh
+	scaleXYZ = glm::vec3(10.0f, 1.0f, 6.0f);
+
+	// set the XYZ rotation for the mesh
+	XrotationDegrees = 90.0f;
+	YrotationDegrees = 0.0f;
+	ZrotationDegrees = 0.0f;
+
+	// set the XYZ position for the mesh
+	positionXYZ = glm::vec3(0.0f, 6.0f, -6.0f);
+
+	// set the transformations into memory to be used on the drawn meshes
+	SetTransformations(
+		scaleXYZ,
+		XrotationDegrees,
+		YrotationDegrees,
+		ZrotationDegrees,
+		positionXYZ);
+
+	// SetShaderColor(1, 1, 1, 1);
+	SetShaderTexture("wall");
+	SetShaderMaterial("light2");
 	m_basicMeshes->DrawPlaneMesh();
 
 	// draw the mesh with transformation values
@@ -462,87 +567,133 @@ void SceneManager::RenderScene()
 
 	/************************************** START MONITOR SECTION *****************************/
 
-	// monitor base made using cylinder
+// monitor base made using cylinder
 	SetTransformations(
 		glm::vec3(1.0, 0.1, 1.0), // scale
 		0.0, 0.0, 0.0, // rotation
-		glm::vec3(0.0, 0.0, 0.0)); // position
-	SetShaderColor(0, 0, 1, 1); // color is set to blue
+		glm::vec3(0.0, 0.0, -3.0)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1); // grey
+
 	m_basicMeshes->DrawCylinderMesh();
 
 	// left leg for monitor base
 	SetTransformations(
 		glm::vec3(0.5, 0.1, 2.0), // scale
 		0.0, -40.0, 0.0, // rotation
-		glm::vec3(-1.3, 0.0, 1.45)); // position
-	SetShaderColor(1, 0, 1, 1); // color is set to pink
+		glm::vec3(-1.3, 0.0, -1.55)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1); // grey
 	m_basicMeshes->DrawPrismMesh();
 
 	// right leg for monitor base
 	SetTransformations(
 		glm::vec3(0.5, 0.1, 2.0), // scale
 		0.0, 40.0, 0.0, // rotation
-		glm::vec3(1.3, 0.0, 1.45)); // position
-	SetShaderColor(1, 0, 1, 1); // color is set to pink
+		glm::vec3(1.3, 0.0, -1.55)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1); // grey
 	m_basicMeshes->DrawPrismMesh();
 
 	// support cylinder that connects to base
 	SetTransformations(
 		glm::vec3(.25, 4.0, .25), // scale
 		0.0, 0.0, 0.0, // rotation
-		glm::vec3(0.0, 0.0, 0.0)); // position
-	SetShaderColor(0, 1, 0, 1); // color is set to green
+		glm::vec3(0.0, 0.0, -3.0)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1); // grey
 	m_basicMeshes->DrawCylinderMesh();
 
 	// connector piece that attatches to support cylinder and monitor screen
 	SetTransformations(
 		glm::vec3(0.3, 0.3, 1.0), // scale
 		0.0, 0.0, 0.0, // rotation
-		glm::vec3(0.0, 2.5, 0.5)); // position
-	SetShaderColor(0, 0, 1, 1);
+		glm::vec3(0.0, 2.5, -2.5)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1); // grey
 	m_basicMeshes->DrawBoxMesh();
 
 	// monitor screen connected to support cylinder
 	SetTransformations(
 		glm::vec3(5.5, 3.5, 0.2), // scale
 		0.0, 0.0, 0.0, // rotation
-		glm::vec3(0.0, 3.0, 1.0)); // position
-	SetShaderColor(1, 0, 0, 1); // color is set to red
+		glm::vec3(0.0, 3.0, -2.0)); // position
+	SetShaderTexture("monitor");
+	SetShaderMaterial("light2");
+
+	m_basicMeshes->DrawBoxMesh();
+
+	// box that covers back side of monitor so textures that wrapped are not visible
+	SetTransformations(
+		glm::vec3(5.5, 3.5, 0.01), // scale
+		0.0, 0.0, 0.0, // rotation
+		glm::vec3(0.0, 3.0, -2.11)); // position
+	SetShaderColor(0, 0, 0, 1); // color is set to black
+
+	m_basicMeshes->DrawBoxMesh();
+
+	// box that covers upper side of monitor so textures that wrapped are not visible
+	SetTransformations(
+		glm::vec3(5.5, 0.21, 0.01), // scale
+		90.0, 0.0, 0.0, // rotation
+		glm::vec3(0.0, 4.75, -2.01)); // position
+	SetShaderColor(0, 0, 0, 1); // color is set to black
+
+	m_basicMeshes->DrawBoxMesh();
+
+	// box that covers lower side of monitor so textures that wrapped are not visible
+	SetTransformations(
+		glm::vec3(5.5, 0.21, 0.01), // scale
+		90.0, 0.0, 0.0, // rotation
+		glm::vec3(0.0, 1.25, -2.01)); // position
+	SetShaderColor(0, 0, 0, 1); // color is set to black
+
+	m_basicMeshes->DrawBoxMesh();
+
+	// box that covers right side of monitor so textures that wrapped are not visible
+	SetTransformations(
+		glm::vec3(3.5, 0.21, 0.01), // scale
+		90.0, 90.0, 0.0, // rotation
+		glm::vec3(2.75, 3.0, -2.01)); // position
+	SetShaderColor(0, 0, 0, 1); // color is set to black
+
+	m_basicMeshes->DrawBoxMesh();
+
+	// box that covers left side of monitor so textures that wrapped are not visible
+	SetTransformations(
+		glm::vec3(3.5, 0.21, 0.01), // scale
+		90.0, 90.0, 0.0, // rotation
+		glm::vec3(-2.75, 3.0, -2.01)); // position
+	SetShaderColor(0, 0, 0, 1); // color is set to black
 
 	m_basicMeshes->DrawBoxMesh();
 
 	/*********************************** END MONITOR SECTION **********************************/
 
-	// TODO: Change positions of keyboard shapes to accurately reflect project picture
-	// TODO: Tweak Scales of keyboard shapes
-	
+
+
 	/************************************** START KEYBOARD SECTION *****************************/
 
 	// Main part of keyboard where keys are
 	SetTransformations(
 		glm::vec3(4.0, 1.0, 0.1), // scale
 		100.0, 0.0, 180.0, // rotation
-		glm::vec3(0.0, 0.2, 5.0)); //position
-	// I know this texture is different than the keyboard presented in the picture. I could not find any decent rgb keyboard textures so this is being used for now
-	SetShaderTexture("keyboard");
+		glm::vec3(-2.0, 0.2, 2.0)); //position
 	
+	SetShaderTexture("keyboard");
+
 	m_basicMeshes->DrawBoxMesh();
 
 	// box that covers right side of keyboard so textures that wrapped are not visible
 	SetTransformations(
 		glm::vec3(0.02, 1.0, 0.1), // scale
 		100.0, 0.0, 0.0, // rotation
-		glm::vec3(2.01, 0.2, 5.0)); // position
-	SetShaderColor(0, 1, 0, 1); // color is set to green
+		glm::vec3(0.01, 0.2, 2.0)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1.0); // grey
 
-	m_basicMeshes->DrawBoxMesh();\
+	m_basicMeshes->DrawBoxMesh();
 
 	// box that covers left side of keyboard so textures that wrapped are not visible
 	SetTransformations(
 		glm::vec3(0.02, 1.0, 0.1), // scale
 		100.0, 0.0, 0.0, // rotation
-		glm::vec3(-2.01, 0.2, 5.0)); // position
-	SetShaderColor(0, 1, 0, 1); // color is set to green
+		glm::vec3(-4.01, 0.2, 2.0)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1.0); // grey
 
 	m_basicMeshes->DrawBoxMesh();
 
@@ -550,8 +701,8 @@ void SceneManager::RenderScene()
 	SetTransformations(
 		glm::vec3(0.02, 4.04, 0.1), // scale
 		100.0, 0.0, 90.0, // rotation
-		glm::vec3(0, 0.29, 4.5)); // position
-	SetShaderColor(0, 1, 0, 1); // color is set to green
+		glm::vec3(-2.0, 0.29, 1.5)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1.0); // grey
 
 	m_basicMeshes->DrawBoxMesh();
 
@@ -559,8 +710,8 @@ void SceneManager::RenderScene()
 	SetTransformations(
 		glm::vec3(0.02, 4.04, 0.1), // scale
 		100.0, 0.0, 90.0, // rotation
-		glm::vec3(0, 0.11, 5.5)); // position
-	SetShaderColor(0, 1, 0, 1); // color is set to green
+		glm::vec3(-2.0, 0.11, 2.5)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1.0); // grey
 
 	m_basicMeshes->DrawBoxMesh();
 
@@ -568,18 +719,17 @@ void SceneManager::RenderScene()
 	SetTransformations(
 		glm::vec3(1.035, 4.04, 0.01), // scale
 		100.0, 0.0, 90.0, // rotation
-		glm::vec3(0, 0.15, 4.99)); // position
-	SetShaderColor(0, 0, 1, 1); // color is set to blue
+		glm::vec3(-2.0, 0.15, 1.99)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1.0); // grey
 
 	m_basicMeshes->DrawBoxMesh();
-
 
 	// wrist rest for keyboard
 	SetTransformations(
 		glm::vec3(4.0, 0.4, 0.05), // scale
 		100.0, 0.0, 0.0, // rotation
-		glm::vec3(0.0, 0.1, 5.69)); // position
-	SetShaderColor(1, 0, 0, 1); // color is set to red
+		glm::vec3(-2.0, 0.1, 2.69)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1.0); // grey
 
 	m_basicMeshes->DrawBoxMesh();
 
@@ -587,8 +737,8 @@ void SceneManager::RenderScene()
 	SetTransformations(
 		glm::vec3(0.2, 0.03, 0.1), // scale
 		100.0, 90.0, 0.0, // rotation
-		glm::vec3(1.9, 0.15, 4.5)); // position
-	SetShaderColor(1, 0, 1, 1); // color is set to pink
+		glm::vec3(-0.1, 0.15, 1.5)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1.0); // grey
 
 	m_basicMeshes->DrawBoxMesh();
 
@@ -596,32 +746,66 @@ void SceneManager::RenderScene()
 	SetTransformations(
 		glm::vec3(0.2, 0.03, 0.1), // scale
 		100.0, 90.0, 0.0, // rotation
-		glm::vec3(-1.9, 0.15, 4.5)); // position
-	SetShaderColor(1, 0, 1, 1); // color is set to pink
+		glm::vec3(-3.9, 0.15, 1.5)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1.0); // grey
 
 	m_basicMeshes->DrawBoxMesh();
 
 	/************************************** END KEYBOARD SECTION *****************************/
 
-	
 
 	/************************************** START MOUSE SECTION *****************************/
 
-	
+	// mouse body made with flattened sphere
+	SetTransformations(
+		glm::vec3(0.6, 0.15, 0.9), // scale 
+		0.0, 0.0, 0.0, // rotation
+		glm::vec3(2.3, 0.18, 2.0)); // position
+	SetShaderColor(0.2, 0.2, 0.2, 1.0); // dark gray
+
+	m_basicMeshes->DrawSphereMesh();
+
+	// mouse scroll wheel made with cylinder
+	SetTransformations(
+		glm::vec3(0.1, 0.1, 0.1), // scale 
+		90.0, 0.0, 90.0, // rotation 
+		glm::vec3(2.35, 0.25, 1.5)); // position
+	SetShaderColor(0.0, 0.0, 0.0, 1.0); // black
+
+	m_basicMeshes->DrawCylinderMesh();
+
+	// mouse side button closest to scroll wheel
+	SetTransformations(
+		glm::vec3(0.2, 0.02, 0.02), // scale
+		90.0, 45.0, 90.0, // rotation
+		glm::vec3(1.82, 0.26, 1.9)); // position
+	SetShaderColor(0, 0, 0, 1); // color is black
+
+	m_basicMeshes->DrawBoxMesh();
+
+	// mouse side button furthest from scroll wheel
+	SetTransformations(
+		glm::vec3(0.2, 0.02, 0.02), // scale
+		90.0, 45.0, 90.0, // rotation
+		glm::vec3(1.82, 0.26, 2.15)); // position
+	SetShaderColor(0, 0, 0, 1); // color is black
+
+	m_basicMeshes->DrawBoxMesh();
+
 
 	/************************************** END MOUSE SECTION *****************************/
 
-	
 
 	/************************************** START MOUSEPAD SECTION *****************************/
 
 	SetTransformations(
 		glm::vec3(10.0, 0.05, 5.0), // scale
 		0.0, 0.0, 0.0, // rotation
-		glm::vec3(0.0, 0.0, 5.0)); // position
-	SetShaderTexture("mousepad");
+		glm::vec3(0.0, 0.0, 2.0)); // position
+	SetShaderColor(0, 0, 0, 1); // color is set to black
 
 	m_basicMeshes->DrawBoxMesh();
 
 	/************************************** END MOUSEPAD SECTION *****************************/
-}
+
+};
