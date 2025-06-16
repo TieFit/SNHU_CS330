@@ -215,36 +215,40 @@ void ViewManager::ProcessKeyboardEvents()
 	}
 
 	// Orthographic front view
-	if (glfwGetKey(m_pWindow, GLFW_KEY_O) == GLFW_PRESS)
+	if (glfwGetKey(m_pWindow, GLFW_KEY_1) == GLFW_PRESS)
 	{
 		// change to a multi-view orthographic projection
 		bOrthographicProjection = true;
 
 		// change the camera settings to show a front orthographic view
-		g_pCamera->Position = glm::vec3(0.0f, 0.0f, 10.0f);
+		g_pCamera->Position = glm::vec3(0.0f, 0.0f, 8.0f);
 		g_pCamera->Up = glm::vec3(0.0f, 1.0f, 0.0f);
 		g_pCamera->Front = glm::vec3(0.0f, 0.0f, -1.0f);
 	}
-	/*if (glfwGetKey(m_pWindow, GLFW_KEY_2) == GLFW_PRESS)
+
+	// orthographic side view
+	if (glfwGetKey(m_pWindow, GLFW_KEY_2) == GLFW_PRESS)
 	{
 		// change to a multi-view orthographic projection
 		bOrthographicProjection = true;
 
 		// change the camera settings to show a side orthographic view
-		g_pCamera->Position = glm::vec3(10.0f, 4.0f, 0.0f);
+		g_pCamera->Position = glm::vec3(10.0f, 0.0f, 0.0f);
 		g_pCamera->Up = glm::vec3(0.0f, 1.0f, 0.0f);
 		g_pCamera->Front = glm::vec3(-1.0f, 0.0f, 0.0f);
 	}
+
+	// orthographic top view
 	if (glfwGetKey(m_pWindow, GLFW_KEY_3) == GLFW_PRESS)
 	{
 		// change to a multi-view orthographic projection
 		bOrthographicProjection = true;
 
 		// change the camera settings to show a top orthographic view
-		g_pCamera->Position = glm::vec3(0.0f, 7.0f, 0.0f);
+		g_pCamera->Position = glm::vec3(0.0f, 10.0f, 0.0f);
 		g_pCamera->Up = glm::vec3(-1.0f, 0.0f, 0.0f);
 		g_pCamera->Front = glm::vec3(0.0f, -1.0f, 0.0f);
-	}*/
+	}
 
 	// perspective view
 	if (glfwGetKey(m_pWindow, GLFW_KEY_P) == GLFW_PRESS)
