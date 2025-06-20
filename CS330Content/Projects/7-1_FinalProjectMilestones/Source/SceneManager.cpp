@@ -414,10 +414,10 @@ void SceneManager::DefineObjectMaterials()
 	/*** be defined. Refer to the code in the OpenGL Sample for help  ***/
 
 	OBJECT_MATERIAL light1;
-	light1.ambientColor = glm::vec3(0.2f, 0.2f, 0.2f);
+	light1.ambientColor = glm::vec3(0.4f, 0.4f, 0.4f);
 	light1.ambientStrength = 1.0f;
-	light1.diffuseColor = glm::vec3(0.4f, 0.4f, 0.4f);
-	light1.specularColor = glm::vec3(0.2f, 0.2f, 0.2f);
+	light1.diffuseColor = glm::vec3(0.8f, 0.8f, 0.8f);
+	light1.specularColor = glm::vec3(0.4f, 0.4f, 0.4f);
 	light1.shininess = 1.0;
 	light1.tag = "light1";
 
